@@ -1,24 +1,41 @@
 import { useEffect, useState } from 'react'
-import { OpenAIApi, Configuration } from "openai"
-import { useSetRecoilState } from 'recoil'
-import { albumAtom, attracAtom, educAtom, healedAtom, mentalAtom, socialAtom, statusAtom, wealthAtom } from '../../recoil/atoms/levelAtoms';
+
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil'
+import { albumAtom, attracAtom, clickedActionAtom, educAtom, healedAtom, mentalAtom, socialAtom, unhealedTraumasAtom, wealthAtom } from '../../recoil/atoms/levelAtoms';
+import { statusAtom } from '../../recoil/atoms/Atoms';
+
+import { ageAtom } from '../../recoil/atoms/playerAtoms';
+
 import switchCategoryLogo from '../../utils/switchCategoryLogo';
+import { generateDalleImage } from "../../utils/generateDalleImage"
+import { calcToBeCollected } from "../../utils/calcToBeCollected"
 
 
+export const AIphoto = ({ player }) => {
 
-export const AIphoto = ({ action, player, traumas }) => {
+    //STUB delete when fetching players from Firebase works
+    const sex = "woman"
 
-    // console.log(import.meta.env.MODE);
-    // console.log(import.meta.env.OPENAI_API_KEY);
 
-    const [collected, setCollected] = useState([])
-    const [toBeCollected, setToBeCollected] = useState(1)
+    const action = useRecoilValue(clickedActionAtom)
+    const unhealedTraumas = useRecoilValue(unhealedTraumasAtom)
+    const [age, setAge] = useRecoilState(ageAtom)
+
+    const setHealed = useSetRecoilState(healedAtom)
+    const setAlbum = useSetRecoilState(albumAtom)
+    const setStatus = useSetRecoilState(statusAtom)
+
     const [AIphotoURL, setAIphotoURL] = useState(null)
     const [showHealing, setShowHealing] = useState(false)
 
-    const setStatus = useSetRecoilState(statusAtom)
-    const setAlbum = useSetRecoilState(albumAtom)
-    const setHealed = useSetRecoilState(healedAtom)
+    const [collected, setCollected] = useState({
+        done: [],
+        toBeCollected: 1,
+    });
+
+    const { done, toBeCollected } = collected;
+
+
 
     const setAtom = {
         attrac: useSetRecoilState(attracAtom),
@@ -43,15 +60,6 @@ export const AIphoto = ({ action, player, traumas }) => {
         backgroundRepeat: 'no-repeat',
     }
 
-    const calcToBeCollected = (action) => {
-        let count = 1;
-
-        if (traumas.includes(action.category) && action.healing) {
-            count += 1;
-        };
-        count += Object.values(action.progress).filter((value) => value !== 0).length;
-        setToBeCollected(count);
-    };
 
     const handleKeyClick = (key) => {
         if (setAtom[key]) {
@@ -59,100 +67,99 @@ export const AIphoto = ({ action, player, traumas }) => {
                 let newValue = oldValue + action.progress[key];
                 if (newValue < 0) {
                     newValue = 0;
-                    // setStatus("gameover")
                 } else if (newValue > 100) {
                     newValue = 100;
                 }
                 return newValue;
             })
-            setCollected((prevCollected) => [...prevCollected, key]);
-            setToBeCollected((prev) => prev - 1);
-
+            setCollected(prev => ({
+                ...prev,
+                done: [...prev.done, key],
+                toBeCollected: prev.toBeCollected - 1,
+            }));
         }
     };
 
     const handlePhotoClick = () => {
         setAlbum((prev) => [...prev, AIphotoURL])
-        setCollected((prevCollected) => [...prevCollected, "📸"]);
-        setToBeCollected((prev) => prev - 1);
+        setCollected(prev => ({
+            ...prev,
+            done: [...prev.done, "📸"],
+            toBeCollected: prev.toBeCollected - 1,
+        }));
     }
 
     const handleHealingClick = () => {
-        setCollected((prevCollected) => [...prevCollected, "💖"]);
         setHealed(true);
-        setToBeCollected((prev) => prev - 1);
+        setCollected(prev => ({
+            ...prev,
+            done: [...prev.done, "💖"],
+            toBeCollected: prev.toBeCollected - 1,
+        }));
     }
 
-
-
-    const generateImage = async (player, action) => {
-        // console.log("generating image deactived");
-        const configuration = new Configuration({
-            apiKey: import.meta.env.VITE_REACT_OPENAI_API_KEY,
-        });
-
-        const openai = new OpenAIApi(configuration);
-        const res = await openai.createImage({
-            prompt: `sharp photo of ${player.age} year old ${player.sex} who likes to ${action.text}, shot on Polaroid BigShot`,
-            // prompt: `High-resolution photo of ${player.age} year old well-defined ${player.sex}, showing her ${action.text}.`,
-            n: 1,
-            size: "512x512",
-        });
-        console.log("res", res);
-        setAIphotoURL(res.data.data[0].url);
-    }
 
     useEffect(() => {
-         generateImage(player, action);
+        const fetchData = async () => {
+            try {
+                const imageData = await generateDalleImage(age, sex, action.text);
+                setAIphotoURL(imageData);
+            } catch (err) {
+                console.error(err);
+            }
+        }
 
-        if (traumas.includes(action.category) && action.healing) {
-            setShowHealing(true);
+        fetchData();
+
+        if (unhealedTraumas.includes(action.category) && action.healing) {
+            setShowHealing(true)
+        }
+        setCollected(prev => ({
+            ...prev,
+            toBeCollected: calcToBeCollected(action, unhealedTraumas),
+        }));
+    }, []);
+
+    useEffect(() => {
+        generateDalleImage(player, action);
+
+        if (unhealedTraumas.includes(action.category) && action.healing) {
+            setHealed(true);
         };
-        calcToBeCollected(action);
+        calcToBeCollected(action, unhealedTraumas);
 
     }, [])
 
     useEffect(() => {
         if (toBeCollected === 0) {
+            setAge(age + 10);
             setStatus("action");
-        } 
+        }
     }, [toBeCollected, setStatus]);
 
 
 
-
-
-
-
-
-
-
-    
     return (
         <div
             style={AIphotoURL ? aiBG : loadingBG}
-            className="photo-container"
+            className="container-photo"
         >
-            {/* <h2>Look what you did!</h2>
-            <p>
-                You made {player.name} {action.text}.
-            </p>
-            <p>Time to reap the rewards!</p> */}
-
+            <div className='note'>Note: </div>
             <div className="container-rewards">
                 {Object.entries(action.progress)
                     .filter(([key, value]) => value !== 0)
                     .map(([key, value]) => (
+
                         <div
                             key={key}
                             onClick={() => handleKeyClick(key)}
-                            className={`btn-emoji ${collected.includes(key) ? "hidden" : ""}`}
+                            className={`btn-emoji ${done.includes(key) ? "hidden" : ""}`}
                         >
                             {switchCategoryLogo(key)}
                         </div>
                     ))}
                 <div
-                    className={`btn-emoji ${collected.includes("📸") ? "hidden" : ""}`}
+                    className={`btn-emoji ${done.includes("📸") ? "hidden" : ""}`}
                     onClick={handlePhotoClick}
                 >
                     📸
@@ -160,13 +167,11 @@ export const AIphoto = ({ action, player, traumas }) => {
 
                 {showHealing && (
                     <div
-                        className={`btn-emoji ${collected.includes("💖") ? "hidden" : ""}`}
+                        className={`btn-emoji ${done.includes("💖") ? "hidden" : ""}`}
                         onClick={handleHealingClick}
                     >
                         💖
                     </div>)}
-
-
             </div>
         </div>
     );
