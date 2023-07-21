@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react'
 import { useRecoilState, useRecoilValue } from 'recoil'
 
-import { statusAtom } from '../recoil/atoms/levelAtoms'
+import { statusAtom } from '../recoil/atoms/Atoms'
 import { clickedActionAtom } from '../recoil/atoms/levelAtoms'
 import { attracAtom } from '../recoil/atoms/levelAtoms'
 import { mentalAtom } from '../recoil/atoms/levelAtoms'
@@ -18,15 +18,15 @@ import { progressAtom } from '../recoil/atoms/playerAtoms'
 
 import { wellbeingSelector } from '../recoil/selectors/levelSelectors'
 
-import { examplePlayer } from '../utils/examplePlayer'
-import actionDataEN from "../assets/gameData/actionDataEN.json"
-import actionDataDE from "../assets/gameData/actionDataDE.json"
-import switchCategoryLogo from '../utils/switchCategoryLogo'
+import { examplePlayer } from '../assets/gameData/examplePlayer'
+
 
 import { AIphoto } from '../components/AIphoto/AIphoto'
 import { Typewriter } from 'react-simple-typewriter'
 import { PlayerInfo } from '../components/PANELS/Progress/PlayerInfo.jsx'
 import { Progress } from '../components/PANELS/Progress/Progress.jsx'
+import { UnhealedTraumas } from '../components/PANELS/Progress/UnhealedTraumas'
+import { Actions } from '../components/PANELS/Actions/Actions'
 
 
 export default function Dashboard() {
@@ -54,56 +54,12 @@ export default function Dashboard() {
 
   //local states
   const [activePlayer, setActivePlayer] = useState(examplePlayer)
-  const [remainingActions, setRemainingActions] = useState([])
-  const [actionsOnScreen, setActionsOnScreen] = useState([])
-  const [healingOnScreen, setHealingOnScreen] = useState(false)
+
+
+  //TODO bring to work again
+  // const [highlightUnhealedTrauma, setHighlightUnhealedTrauma] = useState(false)
 
   //SECTION ACTION FUNCTIONS
-  const shuffleActionData = (language) => {
-    let actionData = [];
-    if (language === "en") {
-      actionData = actionDataEN;
-    } else if (language === "de") {
-      actionData = actionDataDE;
-    }
-    const shuffled = actionData.sort(() => Math.random() - 0.5);
-    setRemainingActions(shuffled);
-    setActionsOnScreen(shuffled.slice(0, 4));
-  }
-
-  const getActionsToScreen = () => {
-    console.log("getActionsToScreen start");
-    const nextActions = remainingActions.slice(0, 3);
-    setRemainingActions(remainingActions.slice(3));
-    setActionsOnScreen(nextActions);
-  }
-
-  const handleActionButton = (action) => {
-    setTimeout(() => {
-      console.log(action);
-      addToWillchain(action.category);
-      setStatus("memory");
-      setClickedAction(action);
-
-      // addToHealing(action);
-    }, 750);
-  }
-
-  const getWidth = (value) => {
-    return { width: `${value}%` }
-  }
-
-
-  const addToWillchain = (category) => {
-    if (willchain.length < 3) {
-      const emoji = switchCategoryLogo(category);
-      setWillchain((prev) =>
-        prev[prev.length - 1] === emoji
-          ? [...prev, emoji]
-          : [emoji]
-      )
-    }
-  };
 
 
   //SECTION PROGRESS FUNCTION
@@ -132,10 +88,13 @@ export default function Dashboard() {
 
   //SECTION WELLBEING FUNCTIONS
 
+  const getWidth = (value) => {
+    return { width: `${value}%` }
+  }
+
+
 
   useEffect(() => {
-    console.log("fire1 start");
-    shuffleActionData("de")
     setUnhealedTraumas(getUnhealedTraumas)
     setAge(activePlayer.age)
     setReincarnation(activePlayer.reincarnation)
@@ -145,13 +104,12 @@ export default function Dashboard() {
     setWealth(activePlayer.progress.wealth)
     setSocial(activePlayer.progress.social)
 
-    const healingActionOnScreen = actionsOnScreen.some(
-      (action) => unhealedTraumas.includes(action.category) && action.healing
-    );
-    setHealingOnScreen(healingActionOnScreen);
+    //TODO bring to work again: unhealed trauma should be blinking in progress if healing action is on screen
+    // const getHealingActionsOnScreen = actionsOnScreen.some(
+    //   (action) => unhealedTraumas.includes(action.category) && action.healing
+    // );
+    // setHealingItemsOnScreen(getHealingActionsOnScreen);
 
-
-    console.log("fire1 end");
   }, [])
 
 
@@ -170,55 +128,12 @@ export default function Dashboard() {
   return (
     <div className="dashboard-bg">
       <div className="dashboard-container">
-        {/* <div className='grid-game'> */}
-
-        {/* SECTION INSTRUCTIONS */}
-        <div className="grid-container-header">
-          <div className="instructor"></div>
-
-          <div className="instructions">
-            <p>
-              <Typewriter
-                words={["Hier kommt später der Erklärtext rein"]}
-                cursor={true}
-              />
-            </p>
-          </div>
-        </div>
-
         <div className="grid-container-main">
-          {/*SECTION ACTION */}
-          {status === "action" && (
-            <div className="container-actions">
-              {actionsOnScreen.map((action, index) => (
-                <div
-                  className={`btn-action eightbit-btn ${unhealedTraumas.includes(action.category) && action.healing ? "healing" : ""}`}
 
-                  key={index}
-                  onClick={() => handleActionButton(action)}
-                >
-                  <h1>{switchCategoryLogo(action.category)}</h1>
-                  <p>{action.text}</p>
-                  <div className='center'>
-                    {Object.entries(action.progress)
-                      .filter(([key, value]) => value !== 0)
-                      .map(([key, value]) => (
-                        <div key={key}>
-                          <span>{switchCategoryLogo(key)}</span>
-                          <span
-                            className={`action-value ${value > 0 ? "positive" : "negative"
-                              } `}
-                          >
-                            {/* {value > 0 ? `+${value}` : `−${value}`} */}
-                            {value > 0 ? `+${value}` : <>&minus;{-value}</>}
-                          </span>
-                        </div>
-                      ))}
-                  </div>
-                </div>
-              ))}
-            </div>
+          {status === "action" && (
+            <Actions />
           )}
+
           {status === "memory" && (
             <AIphoto
               action={clickedAction}
@@ -227,16 +142,15 @@ export default function Dashboard() {
             />
           )}
 
-          {/*SECTION PROGRESS*/}
+
           <div className='container'>
             <PlayerInfo activePlayer={activePlayer} />
-
-            <Progress attrac={attrac} mental={mental} educ={educ} wealth={wealth} social={social} unhealedTraumas={unhealedTraumas} healingOnScreen={healingOnScreen} />
+            <Progress />
+            <UnhealedTraumas />
           </div>
         </div>
 
         <div className="grid-container-level">
-          {/*SECTION WILL */}
           <div className="container-leveltask">
 
             <div className='emoji-container'>
@@ -252,7 +166,6 @@ export default function Dashboard() {
           </div>
 
 
-          {/*SECTION HEALING */}
           <div className="container-leveltask">
             {healed ? (
               <>
@@ -271,7 +184,6 @@ export default function Dashboard() {
             )}
           </div>
 
-          {/*SECTION WELLBEING */}
           <div className="container-leveltask">
             <div>
               <div className="progressbar-outline">
@@ -288,16 +200,6 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/*SECTION ALBUM */}
-        <div className="grid-container-album">
-          <div>
-            <h2>Album</h2>
-            {album &&
-              album.map((photo, index) => (
-                <img src={photo} key={index} alt="album" />
-              ))}
-          </div>
-        </div>
 
       </div>
     </div>

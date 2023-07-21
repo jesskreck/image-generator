@@ -1,9 +1,6 @@
 import { atom } from 'recoil';
 
-export const statusAtom = atom({
-    key: 'status',
-    default: 'action'
-});
+
 
 export const clickedActionAtom = atom({
     key: 'clickedAction',

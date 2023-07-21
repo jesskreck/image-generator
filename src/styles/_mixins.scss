@@ -13,7 +13,6 @@
 @mixin storytext-grid {
     display: grid;
     grid-template-columns: auto 1fr auto;
-    gap: clamp($space-xs, 2vw, $space);
     margin: 0 auto;
     max-width: 1500px;
     padding-bottom: 2rem;
@@ -114,7 +113,8 @@
 @mixin storybox-layout {
     font-size: clamp($font-xs, 2vw, $font-l);
     padding: $space-s;
-    height: 6rem;
+    min-height: 3.3em;
+    height: fit-content;
     display: flex;
     align-items: center;
     text-align: center;

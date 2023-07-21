@@ -5,6 +5,7 @@ import { albumAtom, attracAtom, clickedActionAtom, educAtom, healedAtom, mentalA
 import { statusAtom } from '../../recoil/atoms/Atoms';
 
 import { ageAtom } from '../../recoil/atoms/playerAtoms';
+import { AImodeAtom } from '../../recoil/atoms/Atoms';
 
 import switchCategoryLogo from '../../utils/switchCategoryLogo';
 import { generateDalleImage } from "../../utils/generateDalleImage"
@@ -20,6 +21,7 @@ export const AIphoto = ({ player }) => {
     const action = useRecoilValue(clickedActionAtom)
     const unhealedTraumas = useRecoilValue(unhealedTraumasAtom)
     const [age, setAge] = useRecoilState(ageAtom)
+    const AImode = useRecoilState(AImodeAtom)
 
     const setHealed = useSetRecoilState(healedAtom)
     const setAlbum = useSetRecoilState(albumAtom)
@@ -102,7 +104,7 @@ export const AIphoto = ({ player }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const imageData = await generateDalleImage(age, sex, action.text);
+                const imageData = await generateDalleImage(AImode, age, sex, action.text);
                 setAIphotoURL(imageData);
             } catch (err) {
                 console.error(err);
@@ -120,15 +122,15 @@ export const AIphoto = ({ player }) => {
         }));
     }, []);
 
-    useEffect(() => {
-        generateDalleImage(player, action);
+    // useEffect(() => {
+    //     generateDalleImage(AImode, player, action);
 
-        if (unhealedTraumas.includes(action.category) && action.healing) {
-            setHealed(true);
-        };
-        calcToBeCollected(action, unhealedTraumas);
+    //     if (unhealedTraumas.includes(action.category) && action.healing) {
+    //         setHealed(true);
+    //     };
+    //     calcToBeCollected(action, unhealedTraumas);
 
-    }, [])
+    // }, [])
 
     useEffect(() => {
         if (toBeCollected === 0) {
@@ -144,7 +146,7 @@ export const AIphoto = ({ player }) => {
             style={AIphotoURL ? aiBG : loadingBG}
             className="container-photo"
         >
-            <div className='note'>Note: </div>
+            <div className='note'>Note: Dall-e integration deactivated</div>
             <div className="container-rewards">
                 {Object.entries(action.progress)
                     .filter(([key, value]) => value !== 0)

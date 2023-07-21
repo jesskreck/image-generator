@@ -14,12 +14,30 @@
 
 }
 
-.instructor {
-    background-image: url("https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/bf739ed7-d95b-43c2-8868-1a88a5829ce5/dckci8i-f4a6b793-cf38-4e9e-844f-5a541b17f602.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcL2JmNzM5ZWQ3LWQ5NWItNDNjMi04ODY4LTFhODhhNTgyOWNlNVwvZGNrY2k4aS1mNGE2Yjc5My1jZjM4LTRlOWUtODQ0Zi01YTU0MWIxN2Y2MDIuZ2lmIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.Kswt6g4ucZMuWwH8gPj5IoC5LKCEDaoavB5aWmUDZqY");
-    background-size: cover;
-    background-position: 0% 30%;
+.container-playerinfo {
+    @include padding-right($space);
+    @include padding-left($space);
+    @include padding-top($space-s);
+    @include padding-bottom($space-s);
 }
 
+.container-progress {
+    @include padding($space);
+}
+
+.container-traumas {
+    @include padding($space);
+}
+
+.container-traumas-emojis {
+    display: flex;
+    gap: $space;
+    @include font-size($font-l);
+    @include padding-top($space-xs);
+    @include padding-bottom($space-xs);
+    @include pixelbox;
+    justify-content: center;
+}
 
 
 .container-actions {
@@ -37,6 +55,25 @@
     gap: $space;
 }
 
+.container-photo {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+
+    @include padding-bottom($space-l);
+    @include padding-left($space-l);
+    @include padding-right($space-l);
+}
+
+.container-rewards {
+    display: flex;
+    flex-grow: 1;
+    justify-content: space-evenly;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: stretch;
+    align-items: stretch;
+}
 
 .action-value {
     @include action-value-font;
@@ -50,27 +87,6 @@
     }
 }
 
-.container-playerinfo {
-    @include padding-right($space);
-    @include padding-left($space);
-    @include padding-top($space-s);
-    @include padding-bottom($space-s);
-}
-
-
-.container-progress {
-    @include padding($space);
-}
-
-.container-traumas {
-    display: flex;
-    gap: $space;
-    @include font-size($font-l);
-    @include padding-top($space-xs);
-    @include padding-bottom($space-xs);
-    @include pixelbox;
-    justify-content: center;
-}
 
 .container-leveltask {
     @include padding($space-s);

@@ -49,6 +49,7 @@
 .storybox-avatar {
     @include box($color-secondary, $color-light);
     @include storybox-layout;
+    margin-right: clamp($space-xs, 2vw, $space);
 }
 
 .storybox-text {

@@ -9,3 +9,23 @@
 .space {
     @include padding-top($space);
 }
+
+.note {
+    text-align: center;
+    color: white;
+    font-family: $font-regular;
+    padding-top: $space;
+    height: 60%;
+}
+
+.dev {
+    display: flex;
+    padding-inline: $space-l;
+    padding-block: $space-s;
+    gap: $space-l;
+
+    &>div {
+        display: flex;
+        gap: $space-s;
+    }
+}

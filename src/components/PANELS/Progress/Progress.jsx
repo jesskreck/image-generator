@@ -1,16 +1,17 @@
+import { UnhealedTraumas } from './UnhealedTraumas';
 import React from "react";
 import switchCategoryLogo from "../../../utils/switchCategoryLogo";
+import { useRecoilValue } from "recoil";
+import { attracAtom, educAtom, mentalAtom, socialAtom, wealthAtom } from "../../../recoil/atoms/levelAtoms";
 
 
-export function Progress({
-    attrac,
-    mental,
-    educ,
-    wealth,
-    social,
-    unhealedTraumas,
-    healingOnScreen,
-}) {
+export function Progress({ unhealedTraumas, healingOnScreen }) {
+
+    const attrac = useRecoilValue(attracAtom)
+    const mental = useRecoilValue(mentalAtom)
+    const educ = useRecoilValue(educAtom)
+    const wealth = useRecoilValue(wealthAtom)
+    const social = useRecoilValue(socialAtom)
 
     const progressbarClassName = (value) => {
         return `progressbar-fill ${value < 20 ? 'warning' : value > 80 ? 'success' : ''}`;
@@ -52,11 +53,6 @@ export function Progress({
                 <div className={progressbarClassName(social)} style={getWidth(social)}>
                     {`💛${social}`}
                 </div>
-            </div>
-
-            <h3 className='space'>Unhealed Traumas</h3>
-            <div className="container-traumas">
-                {unhealedTraumas.map((trauma, index) => <div className={`${healingOnScreen ? "healing" : ""}`} key={index}>{switchCategoryLogo(trauma)}</div>)}
             </div>
         </div>
     );

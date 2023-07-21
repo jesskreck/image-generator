@@ -21,6 +21,7 @@ $shadow-color-hover: $color-secondary;
 .btn-story {
     @include button($color-primary);
     @include storybox-layout;
+    margin-left: clamp($space-xs, 2vw, $space);
 }
 
 .btn-emoji {

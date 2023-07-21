@@ -35,23 +35,23 @@
   },
   "intro": {
     "anim0": {
-      "de": "Du tappst weiterhin im Dunkeln, richtig? ",
+      "de": "Du tappst weiterhin im Dunkeln, richtig?",
       "en": "You're still groping in the dark, right? "
     },
     "anim1": {
-      "de": "Du willst wissen wer ich bin? ",
+      "de": "Du willst wissen wer ich bin?",
       "en": "You want to know who I am?"
     },
     "anim2": {
-      "de": "Ich erlaube dir einen kurzen Blick auf mein Wesenszustand zu erhaschen... ",
-      "en": "I allow you a brief glimpse into my state of being..."
+      "de": "Ich erlaube dir einen kurzen Blick auf mein Wesenszustand zu erhaschen ...",
+      "en": "I allow you a brief glimpse into my state of being ..."
     },
     "anim3": {
       "de": "[gif]",
       "en": "[gif]"
     },
     "anim4": {
-      "de": "Nun bist du auch nicht schlauer als vorher, habe ich Recht? ",
+      "de": "Nun bist du auch nicht schlauer als vorher, habe ich Recht?",
       "en": "Now you're not any wiser than before, am I right?"
     },
     "anim5": {
@@ -59,7 +59,7 @@
       "en": "Once you understand yourself, you can understand the world. Explore yourself to the core and you will find all your questions answered in an instant."
     },
     "anim6": {
-      "de": "Das bist du. Oder besser gesagt deine aktuelle Existenz. Du stehst noch ganz am Anfang. ",
+      "de": "Das bist du. Oder besser gesagt deine aktuelle Existenz. Du stehst noch ganz am Anfang.",
       "en": "That's you. Or rather, your current existence. You are still at the very beginning."
     },
     "anim7": {
@@ -67,8 +67,28 @@
       "en": "Take good care of your existence. It should be well in all areas of life."
     },
     "anim8": {
-      "de": "Du kannst frei entscheiden, womit ihr euch die nächsten Jahre beschäftigen möchtet. Wähle jetzt aus. Nach welcher Erfahrung sehnst du dich? ",
+      "de": "Du kannst frei entscheiden, womit ihr euch die nächsten Jahre beschäftigen möchtet. ",
       "en": "You can freely decide what you want to engage in over the next few years. Make your choice now. What experience is it that you crave?"
+    },
+    "anim9": {
+      "de": "Wähle jetzt aus. Nach welcher Erfahrung sehnst du dich?",
+      "en": "Choose now. Which experience are you longing for?"
+    },
+    "anim10": {
+      "de": "Ich verüble es dir nicht, wenn du dein irdisches Dasein in vollen Zügen genießen möchtest … es gibt keine falschen Entscheidungen. ",
+      "en": "I don't hold it against you if you want to fully enjoy your earthly existence ... there are no wrong choices."
+    },
+    "anim11": {
+      "de": "Sammel deine Erfolge ein.",
+      "en": "Collect your successes."
+    },
+    "anim12": {
+      "de": "Ob dies ein Erfolg war? Oder doch ein Fehler? Noch misst du dich an irdischen Standards.",
+      "en": "Was this a success? Or was it a mistake? You are still measuring yourself by earthly standards."
+    },
+    "anim13": {
+      "de": "Erinnerst du dich an die Leichtigkeit höherer Bewusstseinsebenen? ",
+      "en": "Do you remember the ease of higher levels of consciousness?"
     }
   }
 }
